@@ -316,8 +316,12 @@ python package_get_auto_pr() {
 #
 
 python package_convert_pr_autoinc() {
-    pkgv = d.getVar("PKGV")
+    # Expand SRCPV into PKGV if not present
+    srcpv = bb.fetch.get_pkgv_string(d)
+    if srcpv:
+        d.appendVar("PKGV", srcpv)
 
+    pkgv = d.getVar("PKGV")
     # Adjust pkgv as necessary...
     if 'AUTOINC' in pkgv:
         d.setVar("PKGV", pkgv.replace("AUTOINC", "${PRSERV_PV_AUTOINC}"))
